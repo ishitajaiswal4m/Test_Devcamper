@@ -1,10 +1,10 @@
 const express = require('express');
-const {getBootcamp,getBootcamps,postBootcamp,updateBootcamp,deleteBootcamp} = require('../controllers/bootcamps');
+const {getBootcamp,getBootcamps,createBootcamp,updateBootcamp,deleteBootcamp} = require('../controllers/bootcamps');
 const router = express.Router();
 router
 .route('/')
 .get(getBootcamps)
-.post(postBootcamp);
+.post(createBootcamp);
 
 router
 .route('/:id')

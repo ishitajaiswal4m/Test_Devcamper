@@ -16,6 +16,9 @@ connectDB();
 
 const app = express();
 
+//Body Parser- for accesing req.body objects
+app.use(express.json());
+
 if(process.env.NODE_ENV === 'development') app.use(morgan('dev'));  //dev logging third party middleware 
 //Mount Routes
 app.use('/api/v1/bootcamps',bootcamps);
