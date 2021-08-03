@@ -4,8 +4,7 @@ const colors = require('colors');
 const dotenv = require('dotenv');
 dotenv.config({path:'./config/config.env'});
 const morgan = require('morgan');
-const bootcamps = require('./routes/bootcamps'); //Route Files import 
-
+const bootcamps = require('./routes/bootcamps'); //Route Files import
 //connect to Db
 const connectDB = require('./config/db');  //should be after loading env files
 connectDB(); 
@@ -13,6 +12,7 @@ connectDB();
 //middlewares
 // const logger = require('./middleware/logger');
 // app.use(logger); //custom middleware
+const errorHandler = require('./middleware/error');
 
 const app = express();
 
@@ -21,7 +21,9 @@ app.use(express.json());
 
 if(process.env.NODE_ENV === 'development') app.use(morgan('dev'));  //dev logging third party middleware 
 //Mount Routes
-app.use('/api/v1/bootcamps',bootcamps);
+app.use('/api/v1/bootcamps',bootcamps);   //middleware for error should be after this
+//error middleware
+app.use(errorHandler); //should be after mounting the routes
 
 const PORT = process.env.PORT || 5000;
 
