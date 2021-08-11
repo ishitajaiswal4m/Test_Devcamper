@@ -9,7 +9,7 @@ exports.getBootcamps= async(req,res,next) =>{
         res.status(200).json({success:true,count:bootcamps.length,data:bootcamps});
     }
     catch(err){
-        res.status(400).json({success:false});
+        next(err);
     }  
 }
 
@@ -26,7 +26,8 @@ exports.getBootcamp= async(req,res,next) =>{
     }
     catch(err){
        //res.status(400).json({success:false});
-       next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404));
+      // next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404));
+      next(err);
     }
 }
 
@@ -43,7 +44,7 @@ exports.createBootcamp= async(req,res,next) =>{
         });
     }
     catch(err){
-        res.status(400).json({success:false});
+        next(err);
     }
 }
 
@@ -51,14 +52,20 @@ exports.createBootcamp= async(req,res,next) =>{
 //@route    PUT/api/bootcamps/:id
 //@access   Private
 exports.updateBootcamp=async(req,res,next) =>{
-    const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id,req.body,{
-        new:true,
-        runValidators:true
-    });
-    if(!bootcamp){
-        return res.status(400).json({success:false}); //if id is not found in db
+    try{
+        const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id,req.body,{
+            new:true,
+            runValidators:true
+        });
+        if(!bootcamp){
+            return next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)); //if id is not found in db
+        }
+        res.status(200).json({success:true,data:bootcamp});
     }
-    res.status(200).json({success:true,data:bootcamp});
+    catch(err){
+        next(err);
+    }
+   
 }
 
 //@desc     DELETE the bootcamp
@@ -68,12 +75,12 @@ exports.deleteBootcamp=async(req,res,next) =>{
     try{
         const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
         if(!bootcamp){
-            return res.status(400).json({success:false}); //if id is not found in db
+            return next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)); //if id is not found in db
         }
         res.status(200).json({success:true,data:{}});
     }
     catch(err){
-        res.status(400).json({success:false});
+        next(err);
     }
    
 }
