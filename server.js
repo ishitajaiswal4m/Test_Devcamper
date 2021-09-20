@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config({path:'./config/config.env'});
 const morgan = require('morgan');
 const bootcamps = require('./routes/bootcamps'); //Route Files import
+const auth = require('./routes/auth');
 //connect to Db
 const connectDB = require('./config/db');  //should be after loading env files
 connectDB(); 
@@ -22,6 +23,7 @@ app.use(express.json());
 if(process.env.NODE_ENV === 'development') app.use(morgan('dev'));  //dev logging third party middleware 
 //Mount Routes
 app.use('/api/v1/bootcamps',bootcamps);   //middleware for error should be after this
+app.use('/api/v1/auth',auth);  
 //error middleware
 app.use(errorHandler); //should be after mounting the routes
 
